@@ -1,0 +1,139 @@
+{
+  "terminations": [
+    {
+      "id": "2",
+      "employeeName": "Jane Smith",
+      "terminationType": "Not Follow Rules and Regulation",
+      "terminationDate": "20-10-2024",
+      "reason": "Repeated violations of attendance policy",
+      "noticeDate": "05-10-2024",
+      "department": "Sales"
+    },
+    {
+      "id": "3",
+      "employeeName": "Michael Brown",
+      "terminationType": "Other",
+      "terminationDate": "30-09-2024",
+      "reason": "Project downsizing",
+      "noticeDate": "15-09-2024",
+      "department": "Marketing"
+    },
+    {
+      "id": "4",
+      "employeeName": "Emily Davis",
+      "terminationType": "Misconduct",
+      "terminationDate": "05-10-2024",
+      "reason": "Unethical use of company resources",
+      "noticeDate": "20-09-2024",
+      "department": "IT"
+    },
+    {
+      "id": "5",
+      "employeeName": "Chris Wilson",
+      "terminationType": "Other",
+      "terminationDate": "25-11-2024",
+      "reason": "Company restructuring",
+      "noticeDate": "10-11-2024",
+      "department": "Sales"
+    },
+    {
+      "id": "6",
+      "employeeName": "Sophia Johnson",
+      "terminationType": "Not Follow Rules and Regulation",
+      "terminationDate": "01-12-2024",
+      "reason": "Failure to meet performance benchmarks",
+      "noticeDate": "15-11-2024",
+      "department": "Marketing"
+    },
+    {
+      "id": "7",
+      "employeeName": "Daniel Moore",
+      "terminationType": "Misconduct",
+      "terminationDate": "10-10-2024",
+      "reason": "Verbal altercation with team lead",
+      "noticeDate": "25-09-2024",
+      "department": "IT"
+    },
+    {
+      "id": "8",
+      "employeeName": "Olivia Anderson",
+      "terminationType": "Not Follow Rules and Regulation",
+      "terminationDate": "20-09-2024",
+      "reason": "Refusal to comply with safety protocols",
+      "noticeDate": "05-09-2024",
+      "department": "Sales"
+    },
+    {
+      "id": "9",
+      "employeeName": "James Miller",
+      "terminationType": "Other",
+      "terminationDate": "15-10-2024",
+      "reason": "Department shutdown",
+      "noticeDate": "01-10-2024",
+      "department": "Marketing"
+    },
+    {
+      "id": "10",
+      "employeeName": "Emma Garcia",
+      "terminationType": "Misconduct",
+      "terminationDate": "30-11-2024",
+      "reason": "Plagiarism in project reports",
+      "noticeDate": "15-11-2024",
+      "department": "IT"
+    },
+    {
+      "id": "11",
+      "employeeName": "William Martinez",
+      "terminationType": "Not Follow Rules and Regulation",
+      "terminationDate": "01-11-2024",
+      "reason": "Ignoring official deadlines",
+      "noticeDate": "15-10-2024",
+      "department": "Sales"
+    },
+    {
+      "id": "12",
+      "employeeName": "Mia Taylor",
+      "terminationType": "Other",
+      "terminationDate": "10-12-2024",
+      "reason": "End of contractual term",
+      "noticeDate": "25-11-2024",
+      "department": "Marketing"
+    },
+    {
+      "id": "13",
+      "employeeName": "Ethan Lee",
+      "terminationType": "Misconduct",
+      "terminationDate": "25-09-2024",
+      "reason": "Unauthorized access to sensitive data",
+      "noticeDate": "10-09-2024",
+      "department": "IT"
+    },
+    {
+      "id": "14",
+      "employeeName": "Isabella White",
+      "terminationType": "Not Follow Rules and Regulation",
+      "terminationDate": "05-10-2024",
+      "reason": "Persistent tardiness",
+      "noticeDate": "20-09-2024",
+      "department": "Sales"
+    },
+    {
+      "id": "15",
+      "employeeName": "Alexander Harris",
+      "terminationType": "Other",
+      "terminationDate": "20-11-2024",
+      "reason": "Department consolidation",
+      "noticeDate": "05-11-2024",
+      "department": "Marketing"
+    },
+    {
+      "id": "16",
+      "employeeName": "Amelia Clark",
+      "terminationType": "Misconduct",
+      "terminationDate": "15-10-2024",
+      "reason": "Insubordination to supervisors",
+      "noticeDate": "30-09-2024",
+      "department": "IT"
+    }
+  ]
+}
