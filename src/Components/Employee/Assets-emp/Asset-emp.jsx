@@ -1,12 +1,57 @@
-import React,{useState} from "react";
-import { Button, TextField ,MenuItem} from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Button, TextField, MenuItem } from "@mui/material";
+import axios from "axios";
 
 function Assest() {
- const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("");
+  const [data, setData] = useState([]);
+  const [searchCriteria, setSearchCriteria] = useState({
+    employeeName: "",
+    status: "",
+    fromDate: "",
+    toDate: ""
+  });
 
- const handleChange = (event) => {
-   setStatus(event.target.value);
- };
+  // Simulate getting logged-in user employeeId (for now hardcoded as "EMP001")
+  const loggedInEmployeeId = "EMP001"; // This can be fetched from user login data
+
+  const AssetData = async () => {
+    try {
+      let { data: { data } } = await axios.get("http://server.ovf.bgg.mybluehostin.me:8080/findAllAsset");
+      console.log(data);
+      setData(data);
+    } catch (error) {
+      if (error.response) {
+        console.error("Server responded with an error:", error.response.data);
+      } else {
+        console.error("Error fetching assets:", error.message);
+      }
+    }
+  };
+
+  useEffect(() => {
+    AssetData();
+  }, []);
+
+  const handleChange = (event) => {
+    setStatus(event.target.value);
+  };
+
+  const handleSearchChange = (event) => {
+    const { name, value } = event.target;
+    setSearchCriteria({ ...searchCriteria, [name]: value });
+  };
+
+  // Filtered data based on search criteria and logged-in employeeId
+  const filteredData = data.filter((employee) => {
+    const matchesEmployeeId = employee.employeeId === loggedInEmployeeId; // Only show assets for logged-in employee
+    const matchesEmployeeName = employee.employeeName && employee.employeeName.toLowerCase().includes(searchCriteria.employeeName.toLowerCase());
+    const matchesStatus = searchCriteria.status ? employee.status === searchCriteria.status : true;
+    const matchesFromDate = searchCriteria.fromDate ? new Date(employee.grantedDate) >= new Date(searchCriteria.fromDate) : true;
+    const matchesToDate = searchCriteria.toDate ? new Date(employee.grantedDate) <= new Date(searchCriteria.toDate) : true;
+
+    return matchesEmployeeId && matchesEmployeeName && matchesStatus && matchesFromDate && matchesToDate;
+  });
 
   return (
     <div className="p-4 sm:p-6 md:p-8 bg-gray-100 min-h-screen">
@@ -32,12 +77,14 @@ function Assest() {
 
       {/* Search Criteria */}
       <div className="bg-white shadow-md rounded-lg p-4 sm:p-6 mb-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           <TextField
-            fullWidth
-            variant="outlined"
+            fullWidth variant="outlined"
             label="Employee Name"
             size="small"
+            name="employeeName"
+            value={searchCriteria.employeeName}
+            onChange={handleSearchChange}
           />
           <TextField
             fullWidth
@@ -45,14 +92,15 @@ function Assest() {
             label="Status"
             size="small"
             select
-            value={status} // Bind the state to the value prop
-            onChange={handleChange} // Handle the change event
+            name="status"
+            value={searchCriteria.status}
+            onChange={handleSearchChange}
           >
-            {/* Use MenuItem instead of option */}
-            <MenuItem value="Approved"> Approved</MenuItem>
-            <MenuItem value="Pending"> Pending</MenuItem>
-            <MenuItem value="Granted"> Granted</MenuItem>
-            <MenuItem value="Returned"> Returned</MenuItem>
+            <MenuItem value="">All</MenuItem>
+            <MenuItem value="PENDING">Pending</MenuItem>
+            <MenuItem value="APPROVED">Approved</MenuItem>
+            <MenuItem value="GRANTED">Granted</MenuItem>
+            <MenuItem value="RETURNED">Returned</MenuItem>
           </TextField>
           <TextField
             fullWidth
@@ -61,6 +109,9 @@ function Assest() {
             size="small"
             type="date"
             InputLabelProps={{ shrink: true }}
+            name="fromDate"
+            value={searchCriteria.fromDate}
+            onChange={handleSearchChange}
           />
           <TextField
             fullWidth
@@ -69,12 +120,15 @@ function Assest() {
             size="small"
             type="date"
             InputLabelProps={{ shrink: true }}
+            name="toDate"
+            value={searchCriteria.toDate}
+            onChange={handleSearchChange}
           />
           <Button
             variant="contained"
             sx={{
               bgcolor: "#b17f27",
-              color: "#ffff",
+              color: "#fffff",
             }}
           >
             <b>Search</b>
@@ -92,26 +146,28 @@ function Assest() {
               <th className="p-2 sm:p-3">Asset Id</th>
               <th className="p-2 sm:p-3">Asset Employee Id</th>
               <th className="p-2 sm:p-3">Granted date</th>
-              <th className="p-2 sm:p-3">Validity</th>
+              <th className="p-2 sm:p-3">Valid Upto</th>
               <th className="p-2 sm:p-3">Value</th>
               <th className="p-2 sm:p-3">Status</th>
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b hover:bg-gray-50">
-              <td className="p-2 sm:p-3">Catherine Manseau</td>
-              <td className="p-2 sm:p-3 font-bold">Canon Portable Printer</td>
-              <td className="p-2 sm:p-3">#AST-0012</td>
-              <td className="p-2 sm:p-3">kings#2091</td>
-              <td className="p-2 sm:p-3">14 Jan 2020</td>
-              <td className="p-2 sm:p-3">12 months</td>
-              <td className="p-2 sm:p-3">$2500</td>
-              <td className="p-2 sm:p-3">
-                <span className="bg-yellow-100 text-yellow-800 py-1 px-2 rounded-full text-xs sm:text-sm">
-                   Pending
-                </span>
-              </td>
-            </tr>
+            {filteredData.map((employee, index) => (
+              <tr className="border-b hover:bg-gray-50" key={index}>
+                <td className="p-2 sm:p-3">{employee.employeeName}</td>
+                <td className="p-2 sm:p-3 font-bold">{employee.assetName}</td>
+                <td className="p-2 sm:p-3">{employee.assetId}</td>
+                <td className="p-2 sm:p-3">{employee.employeeId}</td>
+                <td className="p-2 sm:p-3">{employee.grantedDate}</td>
+                <td className="p-2 sm:p-3">{employee.validUpto}</td>
+                <td className="p-2 sm:p-3">{employee.assetValue}</td>
+                <td className="p-2 sm:p-3">
+                  <span className="bg-yellow-100 text-yellow-800 py-1 px-2 rounded-full text-xs sm:text-sm">
+                    {employee.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

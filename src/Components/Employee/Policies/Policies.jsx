@@ -1,6 +1,9 @@
-import React from "react";
+import  React from "react";
+
 
 function Policies() {
+ 
+
   return (
     <div className="p-4 md:p-6 lg:p-8">
       {/* Header */}
@@ -10,6 +13,10 @@ function Policies() {
           Dashboard /<span className="text-gray-700 font-medium">Policies</span>
         </div>
       </div>
+
+      <h1 className="text-2xl sm:text-3xl font-extrabold  mb-8 text-gray-800">
+         Company Policy
+        </h1>
 
       {/* Table */}
       <div className="overflow-x-auto bg-white rounded-md shadow-md">
@@ -28,6 +35,8 @@ function Policies() {
               </th>
               <th className="text-left py-2 px-2 md:px-4 border-b">Created</th>
               <th className="text-left py-2 px-2 md:px-4 border-b">File</th>
+
+              
             </tr>
           </thead>
           <tbody>
@@ -43,7 +52,7 @@ function Policies() {
               </td>
               <td className="py-2 px-2 md:px-4 border-b">14th October 2024</td>
               <td className="py-2 px-2 md:px-4 border-b text-green-700 ">
-                <a href="/./public/Company-Policies/Code of Conduct Policies.pdf">
+                <a href="https://drive.google.com/file/d/1w1c25UkebMbto6rPk81eaeUEYv8d_Unb/view?usp=sharing" style={{color:"#b17f27"}}>
                   Download/View
                 </a>
               </td>
@@ -63,7 +72,7 @@ function Policies() {
               </td>
               <td className="py-2 px-2 md:px-4 border-b">14th October 2024</td>
               <td className="py-2 px-2 md:px-4 border-b  text-green-700 ">
-                <a href="/./public/Company-Policies/Compliance and Data Protection Policies.pdf">
+                <a href="https://drive.google.com/file/d/1E29xXSk-xRepQ5UlvSDLqBHbw6QyFI5j/view?usp=sharing" style={{color:"#b17f27"}}>
                   Download/View
                 </a>
               </td>
@@ -81,7 +90,7 @@ function Policies() {
               </td>
               <td className="py-2 px-2 md:px-4 border-b">14th October 2024</td>
               <td className="py-2 px-2 md:px-4 border-b  text-green-700 ">
-                <a href="/./public/Company-Policies/Confidentially Policies.pdf">
+                <a href="https://drive.google.com/file/d/1NOrI2Q5CbtHuIJsf03HEBBmYKjweV5Jz/view?usp=sharing" style={{color:"#b17f27"}}>
                   Download/View
                 </a>
               </td>
@@ -99,7 +108,7 @@ function Policies() {
               </td>
               <td className="py-2 px-2 md:px-4 border-b">14th October 2024</td>
               <td className="py-2 px-2 md:px-4 border-b  text-green-700 ">
-                <a href="/./public/Company-Policies/Disciplinary Policies.pdf">
+                <a href="https://drive.google.com/file/d/1fGOBi-3mlzQMSbaBiuFmffudOGiLm6FH/view?usp=sharing" style={{color:"#b17f27"}}>
                   Download/View
                 </a>
               </td>
@@ -118,7 +127,7 @@ function Policies() {
               </td>
               <td className="py-2 px-2 md:px-4 border-b">14th October 2024</td>
               <td className="py-2 px-2 md:px-4 border-b  text-green-700 ">
-                <a href="/./public/Company-Policies/General Employment Policies.pdf">
+                <a href="https://drive.google.com/file/d/1WaYXLCVZiRJz7-5s3QN2ESgwTyiHFVJQ/view?usp=sharing" style={{color:"#b17f27"}}>
                   Download/View
                 </a>
               </td>
@@ -137,14 +146,35 @@ function Policies() {
               </td>
               <td className="py-2 px-2 md:px-4 border-b">14th October 2024</td>
               <td className="py-2 px-2 md:px-4 border-b  text-green-700 ">
-                <a href="/./public/Company-Policies/Leaves Policies.pdf">
+                <a href="https://drive.google.com/file/d/1tGxR4z88NI7YQXY2g-PJuG6h9nFVhI-f/view?usp=sharing"  style={{color:"#b17f27"}}>
                   Download/View
                 </a>
               </td>
               {/* <Action /> */}
             </tr>
+
             <tr className="hover:bg-gray-50">
               <td className="py-2 px-2 md:px-4 border-b">7</td>
+              <td className="py-2 px-2 md:px-4 border-b">
+                <b>Emergency Leave Policy
+</b>
+              </td>
+              <td className="py-2 px-2 md:px-4 border-b">All Departments</td>
+              <td className="py-2 px-2 md:px-4 border-b">
+              An emergency leave policy typically allows employees to take time off in urgent situations, such as a personal or family emergency, without prior notice, subject to company guidelines.
+              </td>
+              <td className="py-2 px-2 md:px-4 border-b">14th October 2024</td>
+              <td className="py-2 px-2 md:px-4 border-b  text-green-700 ">
+                <a href="https://drive.google.com/file/d/1XtB0bmpuQVdZvGQiK5Fpbg3kMrZeDSzH/view?usp=sharing"  style={{color:"#b17f27"}}>
+                  Download/View
+                </a>
+              </td>
+              {/* <Action /> */}
+            </tr>
+
+
+            <tr className="hover:bg-gray-50">
+              <td className="py-2 px-2 md:px-4 border-b">8</td>
               <td className="py-2 px-2 md:px-4 border-b">
                 <b>Policy on Prevention of Sexual Harassment (POSH)</b>
               </td>
@@ -156,14 +186,14 @@ function Policies() {
               </td>
               <td className="py-2 px-2 md:px-4 border-b">14th October 2024</td>
               <td className="py-2 px-2 md:px-4 border-b  text-green-700 ">
-                <a href="/./public/Company-Policies/Policy on Prevention of Sexual Harassment (POSH).pdf">
+                <a href="https://drive.google.com/file/d/1X9_bYdqhk1vxsX9FcZaWmueeCsrzr6Oh/view?usp=sharing"  style={{color:"#b17f27"}}>
                   Download/View
                 </a>
               </td>
               {/* <Action /> */}
             </tr>
             <tr className="hover:bg-gray-50">
-              <td className="py-2 px-2 md:px-4 border-b">8</td>
+              <td className="py-2 px-2 md:px-4 border-b">9</td>
               <td className="py-2 px-2 md:px-4 border-b">
                 <b>Probation and Training Policy</b>
               </td>
@@ -175,14 +205,14 @@ function Policies() {
               </td>
               <td className="py-2 px-2 md:px-4 border-b">14th October 2024</td>
               <td className="py-2 px-2 md:px-4 border-b  text-green-700 ">
-                <a href="/./public/Company-Policies/Probation and Training Policies.pdf">
+                <a href="https://drive.google.com/file/d/19Uq1MIh5AHrAx064kTVOBIGCzlyPtpAC/view?usp=sharing"  style={{color:"#b17f27"}}>
                   Download/View
                 </a>
               </td>
               {/* <Action /> */}
             </tr>
             <tr className="hover:bg-gray-50">
-              <td className="py-2 px-2 md:px-4 border-b">9</td>
+              <td className="py-2 px-2 md:px-4 border-b">10</td>
               <td className="py-2 px-2 md:px-4 border-b">
                 <b> Property and Asset Responsibility Policy</b>
               </td>
@@ -194,7 +224,7 @@ function Policies() {
               </td>
               <td className="py-2 px-2 md:px-4 border-b">14th October 2024</td>
               <td className="py-2 px-2 md:px-4 border-b  text-green-700 ">
-                <a href="/./public/Company-Policies/Property and Asset Responsibility Policies.pdf">
+                <a href="https://drive.google.com/file/d/1mFp3SJ6ZbDxMiujGCDDWvb8IBo_Q2pzt/view?usp=sharing"  style={{color:"#b17f27"}}>
                   Download/View
                 </a>
               </td>
@@ -202,7 +232,7 @@ function Policies() {
             </tr>
 
             <tr className="hover:bg-gray-50">
-              <td className="py-2 px-2 md:px-4 border-b">10</td>
+              <td className="py-2 px-2 md:px-4 border-b">11</td>
               <td className="py-2 px-2 md:px-4 border-b">
                 <b> Termination Policy</b>
               </td>
@@ -214,15 +244,23 @@ function Policies() {
               </td>
               <td className="py-2 px-2 md:px-4 border-b">14th October 2024</td>
               <td className="py-2 px-2 md:px-4 border-b  text-green-700 ">
-                <a href="/./public/Company-Policies/Termination Policies.pdf">
+                <a href="https://drive.google.com/file/d/1utpERGaJ5Cn_6iToII-S9DJXcYUrS7nB/view?usp=sharing" style={{color:"#b17f27"}}>
                   Download/View
                 </a>
               </td>
               {/* <Action /> */}
             </tr>
+
+            
           </tbody>
         </table>
+
+       
       </div>
+
+      
+
+
     </div>
   );
 }

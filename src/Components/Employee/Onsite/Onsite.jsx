@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "@mui/material";
+import { Button, TextField, Snackbar, Alert } from "@mui/material";
+import axios from "axios";
 
 function Onsite() {
   const {
@@ -8,244 +9,174 @@ function Onsite() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      empName: "",
+      employeeId: "",
+      clientName: "",
+      projectName: "",
+      empContactNo: "",
+      location: "",
+    },
+  });
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const messageRef = useRef(null);
- 
 
-  
-  const [formData, setFormData] = useState({
-    empName: "",
-    employeeId: "",
-    clientName: "",
-    projectName: "",
-    empContactNo: "",
-    location: "",
-  });
-  
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-  };
-  console.log(formData);
-  
-  const sendOnsiteForm =async (data) => {
-    console.log(data); // Handle the form submission
-    messageRef.current.innerText = "Form submitted successfully!";
-    
+  const sendOnsiteForm = async (data) => {
+    console.log(data); // Data from the form submission
+    messageRef.current.innerText = "Submitting...";
     try {
-      await axios.post("http://localhost:8080/terminationDetail", formData);
-      reset();
-    } catch (error) {
-      console.error("Error adding Resignation:", error);
-    }
-    
+      const response = await axios.post("http://server.ovf.bgg.mybluehostin.me:8080/onsiteEmployee", data);
+      console.log("Server Response:", response.data);
 
-     // Reset the form fields using react-hook-form's reset method
-     reset();
-    
-     // Reset the formData state
-     setFormData({
-       empName: "",
-       employeeId: "",
-       clientName: "",
-       projectName: "",
-       empContactNo: "",
-       location: "",
-     });
- 
-     // Optionally clear the success message after a few seconds (if needed)
-     setTimeout(() => {
-       messageRef.current.innerText = "";
-     }, 3000);
-   };
-  
-   const WhatsappRedirect = () => {
-    console.log("Hi");
-    window.location.href = "https://wa.me/917225952005?text=";
+      // Reset the form fields on successful submission
+      reset();
+      setSnackbarMessage("Form submitted successfully!");
+      setOpenSnackbar(true);
+    } catch (error) {
+      console.error("Error submitting the form:", error);
+      setSnackbarMessage("Error submitting the form!");
+      setOpenSnackbar(true);
+    }
+  };
+
+  const WhatsappRedirect = () => {
+    window.location.href = "https://wa.me/916299770149?text=";
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   return (
-    <>
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4">
-      <div className="bg-white shadow-lg rounded-lg p-6 sm:p-8 w-full max-w-md">
-        <h3 className="text-2xl font-bold text-gray-800 text-center mb-4">
-          Onsite Form
-        </h3>
-        <h5
-          ref={messageRef}
-          className="text-center text-green-500 text-sm font-medium mb-4"
-        ></h5>
-
-        <form
-          onSubmit={handleSubmit(sendOnsiteForm)}
-          className="space-y-4"
-        >
-          {/* Full Name Field */}
+    <div className="flex flex-col items-center justify-center min-h-screen ">
+      <div className="bg-white shadow-lg rounded-2xl p-8 sm:p-10 w-full sm:max-w-lg">
+        <h3 className="text-3xl font-semibold text-gray-800 text-center mb-6">Onsite Form</h3>
+        
+        <form onSubmit={handleSubmit(sendOnsiteForm)} className="space-y-6">
           <div>
-            <input
-              type="text"
-              placeholder="Enter your full name"
+            <TextField
+              label="Full Name"
+              fullWidth
+              variant="outlined"
               {...register("empName", {
                 required: "Name is required",
-                minLength: {
-                  value: 3,
-                  message: "Name must be at least 3 characters",
-                },
+                minLength: { value: 3, message: "Name must be at least 3 characters" },
               })}
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              name="empName"
-              value={formData.empName}
-              onChange={handleChange}
+              error={!!errors.empName}
+              helperText={errors.empName?.message}
             />
-            {errors.empName && (
-              <p className="text-red-500 text-sm mt-1">{errors.empName.message}</p>
-            )}
           </div>
 
-          {/* Employee No Field */}
           <div>
-            <input
-              type="text"
-              placeholder="Enter your Employee Id"
+            <TextField
+              label="Employee Id"
+              fullWidth
+              variant="outlined"
               {...register("employeeId", {
                 required: "Employee Id is required",
               })}
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              name="employeeId"
-              value={formData.employeeId}
-              onChange={handleChange}
+              error={!!errors.employeeId}
+              helperText={errors.employeeId?.message}
             />
-            {errors.employeeId && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.employeeId.message}
-              </p>
-            )}
           </div>
 
-          {/* Client Name Field */}
           <div>
-            <input
-              type="text"
-              placeholder="Enter your Client name"
+            <TextField
+              label="Client Name"
+              fullWidth
+              variant="outlined"
               {...register("clientName", {
                 required: "Client name is required",
-                minLength: {
-                  value: 3,
-                  message: "Name must be at least 3 characters",
-                },
+                minLength: { value: 3, message: "Name must be at least 3 characters" },
               })}
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              name="clientName"
-              value={formData.clientName}
-              onChange={handleChange}
+              error={!!errors.clientName}
+              helperText={errors.clientName?.message}
             />
-            {errors.clientName && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.clientName.message}
-              </p>
-            )}
           </div>
 
-          {/* Project Name Field */}
           <div>
-            <input
-              type="text"
-              placeholder="Enter your Project name"
+            <TextField
+              label="Project Name"
+              fullWidth
+              variant="outlined"
               {...register("projectName", {
                 required: "Project name is required",
-                minLength: {
-                  value: 3,
-                  message: "Name must be at least 3 characters",
-                },
+                minLength: { value: 3, message: "Name must be at least 3 characters" },
               })}
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              name="projectName"
-              value={formData.projectName}
-              onChange={handleChange}
+              error={!!errors.projectName}
+              helperText={errors.projectName?.message}
             />
-            {errors.projectName && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.projectName.message}
-              </p>
-            )}
           </div>
 
-          {/* Contact Number Field */}
           <div>
-            <input
+            <TextField
+              label="Contact Number"
+              fullWidth
+              variant="outlined"
               type="tel"
-              placeholder="Enter your contact number"
               {...register("empContactNo", {
                 required: "Mobile number is required",
-                pattern: {
-                  value: /^[6-9][0-9]{9}$/,
-                  message: "Invalid phone number",
-                },
+                pattern: { value: /^[6-9][0-9]{9}$/, message: "Invalid phone number" },
               })}
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              name="empContactNo"
-              value={formData.empContactNo}
-              onChange={handleChange}
+              error={!!errors.empContactNo}
+              helperText={errors.empContactNo?.message}
             />
-            {errors.empContactNo && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.empContactNo.message}
-              </p>
-            )}
           </div>
 
-          {/* Onsite Location Field */}
           <div>
-            <textarea
-              rows="3"
-              placeholder="Enter your Onsite location"
+            <TextField
+              label="Onsite Location"
+              fullWidth
+              variant="outlined"
+              multiline
+              rows={3}
               {...register("location", {
                 required: "Location is required",
               })}
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-            ></textarea>
-            {errors.location && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.location.message}
-              </p>
-            )}
+              error={!!errors.location}
+              helperText={errors.location?.message}
+            />
           </div>
 
-          {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
             <Button
               type="button"
               variant="contained"
-              sx={{
-                bgcolor: "#CD5C5C",
-              }}
+              sx={{ bgcolor: "#CD5C5C" }}
               onClick={WhatsappRedirect}
               className="w-full sm:w-auto"
             >
-              <b> Share your Live location</b>
+              <b>Share your Live location</b>
             </Button>
 
             <Button
-              // type="submit"
+              type="submit"
               variant="contained"
-              sx={{
-                bgcolor: "#b17f27",
-                color: "#ffff",
-              }}
-              onClick={sendOnsiteForm}
+              sx={{ bgcolor: "#b17f27", color: "#fff" }}
+              className="w-full sm:w-auto"
             >
               <b>Submit</b>
             </Button>
           </div>
         </form>
       </div>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbarMessage.includes("Error") ? "error" : "success"}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
-  </>
   );
 }
 
-export default Onsite; 
+export default Onsite;

@@ -41,21 +41,6 @@ const Calendar2025 = () => {
     return daysArray;
   };
 
-  const backendHighlightDates = {
-    January: [5, 12, 19, 26],
-    February: [2, 9, 16, 23],
-    March: [2, 9, 16, 23, 30],
-    April: [6, 13, 20, 27],
-    May: [3, 10, 17, 24, 31],
-    June: [7, 14, 21, 28],
-    July: [5, 12, 19, 26],
-    August: [2, 9, 16, 23, 30],
-    September: [7, 14, 21, 28],
-    October: [4, 11, 18, 25],
-    November: [1, 8, 15, 22, 29],
-    December: [6, 13, 20, 27],
-  };
-
   const salesHighlightDates = {
     January: [6, 13, 20, 27],
     February: [3, 10, 17, 24],
@@ -77,8 +62,8 @@ const Calendar2025 = () => {
     October: {
       1: "Maha Navami",
       2: "Gandhi Jayanti & Vijaya Dashami",
-      20: "Diwali",
-      21: "Deepavali",
+      21: "Diwali",
+      22: "Deepavali",
     },
     November: { 1: "Kannada Rajyothsava" },
     December: { 25: "Christmas" },
@@ -107,12 +92,7 @@ const Calendar2025 = () => {
     if (restrictedHolidayDates[monthName]?.[day]) {
       return "bg-blue-400 text-white shadow-md";
     }
-    if (
-      status === "Backend" &&
-      backendHighlightDates[monthName]?.includes(day)
-    ) {
-      return "bg-red-400 text-white shadow-md";
-    }
+   
     if (status === "Sales" && salesHighlightDates[monthName]?.includes(day)) {
       return "bg-red-400 text-white shadow-md";
     }
@@ -122,7 +102,7 @@ const Calendar2025 = () => {
   return (
     <div className="bg-gray-100 min-h-screen p-8">
       <div className="bg-white shadow-lg rounded-xl p-8 max-w-10xl mx-auto">
-        <h1 className="text-4xl sm:text-xl font-extrabold  mb-8 text-yellow-600">
+        <h1 className="text-4xl sm:text-5xl font-extrabold  mb-8 text-gray-800">
           2025 Calendar
         </h1>
          {/* Dropdown */}
@@ -138,7 +118,7 @@ const Calendar2025 = () => {
           className="bg-white shadow-md max-w-md"
         >
           <MenuItem value="Sales">Sales Department</MenuItem>
-          <MenuItem value="Backend">Backend Department</MenuItem>
+         
         </TextField>
       </div>
 {/* Note Section */}
@@ -149,7 +129,7 @@ const Calendar2025 = () => {
         <div className="flex items-center mb-4">
           <p className="text-xl mr-2">🔴</p>
           <h1 className="text-sm sm:text-lg">
-            The Red dates are holidays for specific-selected department.
+            The Red dates are holidays for sales department.
           </h1>
         </div>
         <div className="flex items-center mb-4">

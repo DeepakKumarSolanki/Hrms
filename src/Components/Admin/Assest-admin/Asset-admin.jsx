@@ -1,19 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, TextField, Dialog, MenuItem } from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
+// import { cleanDigitSectionValue } from "@mui/x-date-pickers/internals/hooks/useField/useField.utils";
 
-function Assest() {
-  let [addAsset, setaddAsset] = useState(false);
-
-  const [status, setStatus] = useState(""); 
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm();
+function Asset() {
+  const [addAsset, setAddAsset] = useState(false);
+  const [data, setData] = useState([]);
+  const [employeeNames, setEmployeeNames] = useState([]);
+  const [fieldsReadonly, setFieldsReadonly] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     assetName: "",
@@ -24,67 +19,177 @@ function Assest() {
     validUpto: "",
     assetValue: "",
     description: "",
-    status: "Pending",
+    status: "",
   });
 
-  const handleChange = (event) => {
-    let { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  // Search state
+  const [searchCriteria, setSearchCriteria] = useState({
+    employeeName: "",
+    status: "",
+    fromDate: "",
+    toDate: "",
+  });
 
-  const handleAddAssetSubmit = async (e) => {
-    console.log("hii");
-    e.preventDefault();
+  useEffect(() => {
+    AssetData();
+    fetchEmployeeNames();
+  }, []);
+
+  const AssetData = async () => {
     try {
-      await axios.post("http://localhost:8080/terminationDetail", formData);
-      setaddAsset(false); // Close the modal after submission
-      AssetData(); // Refresh the data
+      let { data: { data } } = await axios.get("http://server.ovf.bgg.mybluehostin.me:8080/findAllAsset");
+      console.log("Assets retrieved:", data);
+      setData(data);
     } catch (error) {
-      console.error("Error adding termination:", error);
+      console.error("Error fetching assets:", error.message);
     }
   };
 
-  const onSubmit = (data) => {
-    console.log(data);
-    handleAddAssetSubmit(data);
-    reset(); // Reset form after successful submission
+  const fetchEmployeeNames = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get("http://server.ovf.bgg.mybluehostin.me:8080/fetchAllEmployees");
+      setEmployeeNames(response.data.data);
+      console.log(response.data.data)
+    } catch (error) {
+      console.error("Error fetching employee names:", error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  const handleAddAssetSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("http://server.ovf.bgg.mybluehostin.me:8080/grantAsset", formData);
+      setAddAsset(false);
+      AssetData();
+    } catch (error) {
+      console.error("Error adding asset:", error.message);
+    }
+  };
+
+  const handleFormChange = (name, value) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleEmployeeChange = (field, value) => {
+    const selectedEmployee = employeeNames.find((e) => e[field === "employeeName" ? "name" : "id"] === value);
+    if (selectedEmployee) {
+      setFormData({
+        ...formData,
+        employeeName: selectedEmployee.name,
+        employeeId: selectedEmployee.employeeId,
+      });
+    }
+    setFieldsReadonly(true);
+  };
+
+  const handleDialogClose = () => {
+    setAddAsset(false);
+    setFormData({
+      assetName: "",
+      assetId: "",
+      employeeName: "",
+      employeeId: "",
+      grantedDate: "",
+      validUpto: "",
+      assetValue: "",
+      description: "",
+      status: "",
+    });
+    setFieldsReadonly(false);
+  };
+
+  const handleSearchChange = (e) => {
+    const { name, value } = e.target;
+    setSearchCriteria((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const filteredData = data.filter((employee) => {
+    const matchesEmployeeName =
+      employee.employeeName &&
+      employee.employeeName.toLowerCase().includes(searchCriteria.employeeName.toLowerCase());
+    const matchesStatus = searchCriteria.status
+      ? employee.status === searchCriteria.status
+      : true;
+    const matchesFromDate = searchCriteria.fromDate
+      ? new Date(employee.grantedDate) >= new Date(searchCriteria.fromDate)
+      : true;
+    const matchesToDate = searchCriteria.toDate
+      ? new Date(employee.grantedDate) <= new Date(searchCriteria.toDate)
+      : true;
+
+    return matchesEmployeeName && matchesStatus && matchesFromDate && matchesToDate;
+  });
+
+
+
+
+// Handle the Status
+const handleStatusChange = async (id, newStatus) => {
+  console.log(`Updating Asset ID: ${id} with status: ${newStatus}`);
+  try {
+    // Send the updated status to the backend
+    const response = await axios.put(
+     `http://server.ovf.bgg.mybluehostin.me:8080/changeStatus/${id}`,
+      {
+        status: newStatus,
+      }
+    );
+
+    console.log("Response from backend:", response.data);
+
+    // Re-fetch data from the backend to ensure synchronization
+    const updatedData = await axios.get("http://server.ovf.bgg.mybluehostin.me:8080/findAllAsset");
+    console.log(updatedData.data.data);
+    setData(updatedData.data.data); // Update state with fresh data from backend
+    // alert("Status updated successfully!");
+  } catch (error) {
+    console.error("Error updating status:", error);
+    alert("Failed to update status.");
+  }
+};
+
+
+console.log(filteredData)
+
+
+
+
+
   return (
-    <div className="p-4 sm:p-6 md:p-8 bg-gray-100 min-h-screen">
+    <div className="p-4 sm:p-6 md:p-8 min-h-screen">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Assets</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-yellow-600">Assets</h2>
         <Button
           variant="contained"
           color="error"
           sx={{
-                  bgcolor: "#b17f27",
-                          color: "#FFFF",
-                        }}
+            bgcolor: "#b17f27",
+            color: "#fffff",
+          }}
           onClick={() => {
-            setaddAsset(true);
+            setAddAsset(true);
           }}
         >
-          <b>Add Asset</b>
+          <b> + Add Asset</b>
         </Button>
       </div>
 
       {/* Breadcrumb */}
-      <div className="text-sm text-gray-500 mb-6">
-        <a href="#" className="hover:underline">
-          Dashboard
-        </a>
-        /
-        <span className="font-semibold text-gray-800">
-          <a href="#" className="hover:underline">
-            Assets
-          </a>
-        </span>
+      <div className="text-yellow-600 text-sm md:text-base mb-8">
+        Dashboard /<span className="text-yellow-600 font-medium"> Asset</span>
       </div>
 
-
- {/* Search Criteria */}
+      {/* Search Criteria */}
       <div className="bg-white shadow-md rounded-lg p-4 sm:p-6 mb-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           <TextField
@@ -92,6 +197,9 @@ function Assest() {
             variant="outlined"
             label="Employee Name"
             size="small"
+            name="employeeName"
+            value={searchCriteria.employeeName}
+            onChange={handleSearchChange}
           />
           <TextField
             fullWidth
@@ -99,14 +207,15 @@ function Assest() {
             label="Status"
             size="small"
             select
-            value={status} // Bind the state to the value prop
-            onChange={handleChange} // Handle the change event
+            name="status"
+            value={searchCriteria.status}
+            onChange={handleSearchChange}
           >
-            {/* Use MenuItem instead of option */}
-            <MenuItem value="Approved">Approved</MenuItem>
-            <MenuItem value="Pending"> Pending</MenuItem>
-            <MenuItem value="Granted"> Granted</MenuItem>
-            <MenuItem value="Returned"> Returned</MenuItem>
+            <MenuItem value="">All</MenuItem>
+            <MenuItem value="PENDING">Pending</MenuItem>
+            <MenuItem value="APPROVED">Approved</MenuItem>
+            <MenuItem value="GRANTED">Granted</MenuItem>
+            <MenuItem value="RETURNED">Returned</MenuItem>
           </TextField>
           <TextField
             fullWidth
@@ -115,6 +224,9 @@ function Assest() {
             size="small"
             type="date"
             InputLabelProps={{ shrink: true }}
+            name="fromDate"
+            value={searchCriteria.fromDate}
+            onChange={handleSearchChange}
           />
           <TextField
             fullWidth
@@ -123,13 +235,16 @@ function Assest() {
             size="small"
             type="date"
             InputLabelProps={{ shrink: true }}
+            name="toDate"
+            value={searchCriteria.toDate}
+            onChange={handleSearchChange}
           />
           <Button
             variant="contained"
             sx={{
-                          bgcolor: "#b17f27",
-                          color: "#FFFF",
-                        }}
+              bgcolor: "#b17f27",
+              color: "#fffff",
+            }}
           >
             <b>Search</b>
           </Button>
@@ -146,39 +261,70 @@ function Assest() {
               <th className="p-2 sm:p-3">Asset Id</th>
               <th className="p-2 sm:p-3">Asset Employee Id</th>
               <th className="p-2 sm:p-3">Granted date</th>
-              <th className="p-2 sm:p-3">validUpto</th>
+              <th className="p-2 sm:p-3">Valid Upto</th>
               <th className="p-2 sm:p-3">Value</th>
               <th className="p-2 sm:p-3">Status</th>
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b hover:bg-gray-50">
-              <td className="p-2 sm:p-3">Catherine Manseau</td>
-              <td className="p-2 sm:p-3 font-bold">Canon Portable Printer</td>
-              <td className="p-2 sm:p-3">#AST-0012</td>
-              <td className="p-2 sm:p-3">kings#2091</td>
-              <td className="p-2 sm:p-3">14 Jan 2020</td>
-              <td className="p-2 sm:p-3">12 months</td>
-              <td className="p-2 sm:p-3">$2500</td>
-              <td className="p-2 sm:p-3">
-                <span className="bg-yellow-100 text-yellow-800 py-1 px-2 rounded-full text-xs sm:text-sm">
-                  Pending
-                </span>
-              </td>
-            </tr>
+            {filteredData.map((employee, index) => (
+
+            
+
+
+              <tr className="border-b hover:bg-gray-50" key={index}>
+                <td className="p-2 sm:p-3">{employee.employeeName}</td>
+                <td className="p-2 sm:p-3 font-bold">{employee.assetName}</td>
+                <td className="p-2 sm:p-3">{employee.assetId}</td>
+                <td className="p-2 sm:p-3">{employee.employeeId}</td>
+                <td className="p-2 sm:p-3">{employee.grantedDate}</td>
+                <td className="p-2 sm:p-3">{employee.validUpto}</td>
+                <td className="p-2 sm:p-3">{employee.assetValue}</td>
+                {/* <td className="p-2 sm:p-3">
+                  <span
+                    className={`${
+                      employee.status === "APPROVED"
+                        ? "text-green-500"
+                        : employee.status === "PENDING"
+                        ? "text-red-500"
+                        : employee.status === "GRANTED"
+                        ? "text-orange-500"
+                        : employee.status === "RETURNED"
+                        ? "text-blue-500"
+                        : ""
+                    }`}
+                  >
+                    {employee.status}
+                  </span>
+                </td> */}
+
+                <td className="py-2 px-2 md:px-4 border-b">
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      size="small"
+                      select
+                      value={employee.status || ""}
+                      onChange={(e) =>
+                        handleStatusChange(employee.id, e.target.value)
+                      }
+                    >
+                      <MenuItem value="GRANTED"><span className="text-orange-500">GRANTED</span></MenuItem>
+                      <MenuItem value="PENDING"><span className="text-red-500">PENDING</span></MenuItem>
+                      <MenuItem value="APPROVED"><span className="text-green-500">APPROVED</span></MenuItem>
+                      <MenuItem value="RETURNED"><span className="text-blue-500">RETURNED</span></MenuItem>
+                    </TextField>
+                  </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
 
-
-
-
       {/* Add Asset Dialog */}
       <Dialog
         open={addAsset}
-        onClose={() => {
-          setaddAsset(false);
-        }}
+        onClose={handleDialogClose}
         fullWidth
         maxWidth="sm"
       >
@@ -186,192 +332,131 @@ function Assest() {
           <h3 className="text-xl sm:text-2xl font-semibold text-center mb-6">
             Add Asset
           </h3>
-          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+          <form className="space-y-4" onSubmit={handleAddAssetSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Controller
+              <TextField
+                fullWidth
+                label="Asset Name"
+                variant="outlined"
+                required
                 name="assetName"
-                control={control}
-                rules={{
-                  required: "Asset Name is required",
-                }}
-                render={({ field }) => (
-                  <TextField
-                    fullWidth
-                    label="Asset Name"
-                    variant="outlined"
-                    required
-                    error={!!errors.assetName}
-                    helperText={errors.assetName ? errors.assetName.message : ""}
-                    {...field}
-                  />
-                )}
+                value={formData.assetName}
+                onChange={(e) => handleFormChange("assetName", e.target.value)}
               />
-              <Controller
+              <TextField
+                fullWidth
+                label="Asset Id"
+                variant="outlined"
                 name="assetId"
-                control={control}
-                rules={{
-                  required: "Asset Id is required",
-                }}
-                render={({ field }) => (
-                  <TextField
-                    fullWidth
-                    label="Asset Id"
-                    variant="outlined"
-                    required
-                    error={!!errors.assetId}
-                    helperText={errors.assetId ? errors.assetId.message : ""}
-                    {...field}
-                  />
-                )}
+                value={formData.assetId}
+                onChange={(e) => handleFormChange("assetId", e.target.value)}
               />
-              <Controller
-                name="employeeName"
-                control={control}
-                rules={{
-                  required: "Employee Name is required",
-                }}
-                render={({ field }) => (
-                  <TextField
-                    fullWidth
-                    label="Asset Employee Name"
-                    variant="outlined"
-                    required
-                    error={!!errors.employeeName}
-                    helperText={errors.employeeName ? errors.employeeName.message : ""}
-                    {...field}
-                  />
-                )}
+              <TextField
+                fullWidth
+                label="Employee Name"
+                select
+                variant="outlined"
+                value={formData.employeeName}
+                onChange={(e) =>
+                  handleEmployeeChange("employeeName", e.target.value)
+                }
+                // disabled={fieldsReadonly}
+              >
+                {employeeNames.map((employee) => (
+                  <MenuItem key={employee.id} value={employee.name}>
+                    {employee.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                fullWidth
+                label="Employee Id"
+                variant="outlined"
+                value={formData.employeeId}
+                onChange={(e) =>
+                  handleEmployeeChange("employeeId", e.target.value)
+                }
+                disabled={fieldsReadonly}
               />
-              <Controller
-                name="employeeId"
-                control={control}
-                rules={{
-                  required: "Employee Id is required",
-                }}
-                render={({ field }) => (
-                  <TextField
-                    fullWidth
-                    label="Asset Employee Id"
-                    variant="outlined"
-                    required
-                    error={!!errors.employeeId}
-                    helperText={errors.employeeId ? errors.employeeId.message : ""}
-                    {...field}
-                  />
-                )}
-              />
-              <Controller
+              <TextField
+                fullWidth
+                label="Granted Date"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                variant="outlined"
                 name="grantedDate"
-                control={control}
-                rules={{
-                  required: "Granted Date is required",
-                }}
-                render={({ field }) => (
-                  <TextField
-                    fullWidth
-                    label="Granted Date"
-                    type="date"
-                    InputLabelProps={{ shrink: true }}
-                    variant="outlined"
-                    required
-                    error={!!errors.grantedDate}
-                    helperText={errors.grantedDate ? errors.grantedDate.message : ""}
-                    {...field}
-                  />
-                )}
+                value={formData.grantedDate}
+                onChange={(e) => handleFormChange("grantedDate", e.target.value)}
+                inputProps={{
+        min: new Date().toISOString().split("T")[0], // Disable past dates
+      }}
               />
-              <Controller
+              <TextField
+                fullWidth
+                label="Valid Upto (In Months)"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                variant="outlined"
                 name="validUpto"
-                control={control}
-                rules={{
-                  required: "Valid Upto Date is required",
-                }}
-                render={({ field }) => (
-                  <TextField
-                    fullWidth
-                    label="Valid Upto"
-                    type="date"
-                    InputLabelProps={{ shrink: true }}
-                    variant="outlined"
-                    required
-                    error={!!errors.validUpto}
-                    helperText={errors.validUpto ? errors.validUpto.message : ""}
-                    {...field}
-                  />
-                )}
+                value={formData.validUpto}
+                onChange={(e) => handleFormChange("validUpto", e.target.value)}
+                inputProps={{
+        min: new Date().toISOString().split("T")[0], // Disable past dates
+      }}
               />
-              <Controller
+              <TextField
+                fullWidth
+                label="Value"
+                type="tel"
+                variant="outlined"
                 name="assetValue"
-                control={control}
-                rules={{
-                  required: "Asset Value is required",
-                  valueAsNumber: true,
-                }}
-                render={({ field }) => (
-                  <TextField
-                    fullWidth
-                    label="Asset Value"
-                    type="number"
-                    variant="outlined"
-                    required
-                    error={!!errors.assetValue}
-                    helperText={errors.assetValue ? errors.assetValue.message : ""}
-                    {...field}
-                  />
-                )}
+                value={formData.assetValue}
+                onChange={(e) => handleFormChange("assetValue", e.target.value)}
               />
             </div>
-            <Controller
+            <TextField
+              fullWidth
+              multiline
+              rows={3}
+              label="Description"
+              variant="outlined"
               name="description"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={3}
-                  label="Description"
-                  variant="outlined"
-                  {...field}
-                />
-              )}
+              value={formData.description}
+              onChange={(e) => handleFormChange("description", e.target.value)}
             />
-            <Controller
+            <TextField
+              fullWidth
+              select
+              label="Status"
+              variant="outlined"
               name="status"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  fullWidth
-                  select
-                  label="Status"
-                  variant="outlined"
-                  {...field}
-                >
-                  <MenuItem value="Pending">Pending</MenuItem>
-                  <MenuItem value="Approved">Approved</MenuItem>
-                  <MenuItem value="Granted">Granted</MenuItem>
-                  <MenuItem value="Returned">Returned</MenuItem>
-                </TextField>
-              )}
-            />
+              value={formData.status}
+              onChange={(e) => handleFormChange("status", e.target.value)}
+            >
+              <MenuItem value="PENDING">Pending</MenuItem>
+              <MenuItem value="APPROVED">Approved</MenuItem>
+              <MenuItem value="GRANTED">Granted</MenuItem>
+              <MenuItem value="RETURNED">Returned</MenuItem>
+            </TextField>
             <div className="flex justify-end space-x-2">
               <Button
                 variant="contained"
                 sx={{
                   bgcolor: "#CD5C5C",
                 }}
-                onClick={() => setaddAsset(false)}
+                onClick={handleDialogClose}
               >
                 <b>Cancel</b>
               </Button>
               <Button
                 variant="contained"
                 sx={{
-                          bgcolor: "#b17f27",
-                          color: "#FFFF",
-                        }}
+                  bgcolor: "#b17f27",
+                  color: "#fffff",
+                }}
                 type="submit"
               >
-                Submit
+                <b>Submit</b>
               </Button>
             </div>
           </form>
@@ -381,4 +466,4 @@ function Assest() {
   );
 }
 
-export default Assest;
+export default Asset;

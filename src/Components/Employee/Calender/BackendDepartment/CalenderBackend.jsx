@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TextField, MenuItem } from "@mui/material";
 
 const Calendar2025 = () => {
-  const [status, setStatus] = useState("Sales");
+  const [status, setStatus] = useState("Backend");
 
   const handleChange = (event) => {
     setStatus(event.target.value);
@@ -123,7 +123,7 @@ const Calendar2025 = () => {
     <div className="bg-gray-100 min-h-screen p-8">
       <div className="bg-white shadow-lg rounded-xl p-8 max-w-10xl mx-auto">
         <h1 className="text-4xl sm:text-5xl font-extrabold  mb-8 text-gray-800">
-          Academic Calendar
+          2025 Calendar
         </h1>
          {/* Dropdown */}
       <div className="flex mb-8">
@@ -137,7 +137,7 @@ const Calendar2025 = () => {
           onChange={handleChange}
           className="bg-white shadow-md max-w-md"
         >
-          <MenuItem value="Sales">Sales Department</MenuItem>
+          {/* <MenuItem value="Sales">Sales Department</MenuItem> */}
           <MenuItem value="Backend">Backend Department</MenuItem>
         </TextField>
       </div>
