@@ -15,7 +15,6 @@ function KnowledgeBaseAdmin() {
         </div>
       </div>
 
-
      
 
       {/* Table */}
@@ -33,7 +32,7 @@ function KnowledgeBaseAdmin() {
               <th className="text-left py-2 px-2 md:px-4 border-b">
                 Description
               </th>
-              <th className="text-left py-2 px-2 md:px-4 border-b">Published</th>
+              <th className="text-left py-2 px-2 md:px-4 border-b">Created</th>
               <th className="text-left py-2 px-2 md:px-4 border-b">File</th>
             </tr>
           </thead>
@@ -46,7 +45,7 @@ function KnowledgeBaseAdmin() {
               Kingsmen Training provides professional development programs to enhance skills and knowledge in various fields, fastering growth and expertise.</td>
               <td className="py-2 px-2 md:px-4 border-b">14 oct 2024</td>
               <td className="py-2 px-2 md:px-4 border-b  text-green-700 ">
-                <a href="https://drive.google.com/file/d/187wSuzzW8n-I60gY8201V2A0zme2RcQH/view?usp=sharing" target="_blank" style={{color:"#b17f27"}}>
+                <a href="https://drive.google.com/file/d/187wSuzzW8n-I60gY8201V2A0zme2RcQH/view?usp=sharing" style={{color:"#b17f27"}}>
                   Download/View
                 </a>
                 </td>

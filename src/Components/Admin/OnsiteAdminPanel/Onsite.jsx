@@ -8,6 +8,7 @@ function OnsiteAdminPanel() {
   const OnsiteData = async () => {
     try {
       const response = await axios.get("http://server.ovf.bgg.mybluehostin.me:8080/findAllOnsiteEmployees");
+      console.log(response.data.data);
       setData(response.data.data);  // Assuming the response has a 'data' property
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -43,6 +44,7 @@ function OnsiteAdminPanel() {
               <th className="text-left py-2 px-2 md:px-4 border-b">Client Name</th>
               <th className="text-left py-2 px-2 md:px-4 border-b">Project Name</th>
               <th className="text-left py-2 px-2 md:px-4 border-b">Contact No.</th>
+              {/* <th className="text-left py-2 px-2 md:px-4 border-b">Onsite Date</th> */}
               <th className="text-left py-2 px-2 md:px-4 border-b">Location</th>
             </tr>
           </thead>
@@ -55,6 +57,7 @@ function OnsiteAdminPanel() {
                 <td className="py-2 px-2 md:px-4 border-b">{employee.clientName}</td>
                 <td className="py-2 px-2 md:px-4 border-b">{employee.projectName}</td>
                 <td className="py-2 px-2 md:px-4 border-b">{employee.empContactNo}</td>
+                {/* <td className="py-2 px-2 md:px-4 border-b">{employee.dateOfSite}</td> */}
                 <td className="py-2 px-2 md:px-4 border-b">{employee.location}</td>
               </tr>
             ))}

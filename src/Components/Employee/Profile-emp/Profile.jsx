@@ -21,10 +21,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import { motion } from "framer-motion";
 import image from "./images/images.png"; // Assume image is correctly imported
 import axios from "axios"
+import {useAuth} from "../../../Components/Context/AuthContext"
 
 const UltimateUserProfile = () => {
+  const { authState } = useAuth();
 
-  const DEFAULT_EMPLOYEE_ID = "EMP001";
+  
+
+  const DEFAULT_EMPLOYEE_ID = authState.userDetails.employeeId;
   const [openDialog, setOpenDialog] = useState(false);
   const [currentCard, setCurrentCard] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState(null);

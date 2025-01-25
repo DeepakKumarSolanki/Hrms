@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, TextField, MenuItem } from "@mui/material";
 import axios from "axios";
+import {useAuth} from "../../../Components/Context/AuthContext"
 
 function Assest() {
   const [status, setStatus] = useState("");
@@ -12,8 +13,11 @@ function Assest() {
     toDate: ""
   });
 
+  const {authState}=useAuth()
   // Simulate getting logged-in user employeeId (for now hardcoded as "EMP001")
-  const loggedInEmployeeId = "EMP001"; // This can be fetched from user login data
+  const loggedInEmployeeId = authState.userDetails.employeeId;
+
+  console.log(loggedInEmployeeId)
 
   const AssetData = async () => {
     try {
@@ -128,7 +132,7 @@ function Assest() {
             variant="contained"
             sx={{
               bgcolor: "#b17f27",
-              color: "#fffff",
+              color: "#000000",
             }}
           >
             <b>Search</b>

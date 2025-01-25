@@ -10,7 +10,7 @@ import ResignationAdminPanel from './Components/Admin/Resignation-admin/Resignat
 
 import KnowledgeBase from "./Components/Employee/KnowledgeBase/KnowledgeBase"
 import KnowledgeBaseAdmin from "./Components/Admin/KnowledgeBase-admin/KnowledgeBaseAdmin"
-import Calendar from './Components/Admin/Calender/Calender';
+import CalendarAdmin from './Components/Admin/Calender/Calender';
 import Calendar2025 from './Components/Employee/Calender/Sales/Calender';
 import EmployeeProfile from "./Components/Employee/Profile-emp/Profile"
 import TerminationPage from "./Components/Admin/Termination/Termination";
@@ -24,67 +24,71 @@ import CalendarBackend from "./Components/Employee/Calender/BackendDepartment/Ca
 function App() {
   return (
     <div>
-  <AssetAdmin />
- <ResignationAdminPanel/> 
-  {/* 
+
+
+  <AssetAdmin /> 
+ {/*
  <Termination/> 
-<EmployeeProfile/>
-    
-  <Assest/>  
-
-{/* 
-
-
- */}
-
-
-      {/*
+  <ResignationAdminPanel/> 
    <Resignation/>   
-
+  <Assest/>  
+ <EmployeeProfile/>
        <OnsiteAdminPanel/>
      <Onsite/>  
-     */}
- 
- 
-
-
-     {/*
-
-     
-      */}
-     {/* 
-
-
-    <Calendar/> 
-
-
-     
-     */}
-
-
-
-
-    {/* 
-
-      
-     
+    <CalendarAdmin/> 
      <KnowledgeBaseAdmin/>    
      <KnowledgeBase/>
-    
-    */}
-   
-{/*     
+
+
+  
+ 
+  
+
+
       
+
+    
+ 
  
 
+
+     
+
+
+
+
+   
+
+
+
+
     
 
-*/}
-{/* <CalendarSales/>
+      
+     
+    
+   
+   
+
+
+<CalendarSales/>
 <CalendarBackend/> 
 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  */}
        <Policies/>
- */}
+
+
+
 
 
 

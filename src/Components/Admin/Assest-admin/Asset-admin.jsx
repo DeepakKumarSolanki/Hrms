@@ -48,15 +48,18 @@ function Asset() {
   const fetchEmployeeNames = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://server.ovf.bgg.mybluehostin.me:8080/fetchAllEmployees");
-      setEmployeeNames(response.data.data);
-      console.log(response.data.data)
+      const response = await axios.get(
+        "http://server.ovf.bgg.mybluehostin.me:8080/fetchAllEmployees"
+      );
+      setEmployeeNames(response.data.data); // Ensure department is part of the response
+      console.log(response.data.data);
     } catch (error) {
       console.error("Error fetching employee names:", error.message);
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handleAddAssetSubmit = async (e) => {
     e.preventDefault();
@@ -64,6 +67,7 @@ function Asset() {
       await axios.post("http://server.ovf.bgg.mybluehostin.me:8080/grantAsset", formData);
       setAddAsset(false);
       AssetData();
+      reset();
     } catch (error) {
       console.error("Error adding asset:", error.message);
     }
@@ -76,8 +80,28 @@ function Asset() {
     }));
   };
 
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
+
+  const handleDepartmentChange = (department) => {
+    handleFormChange("department", department);
+    const employeesInDepartment = employeeNames.filter(
+      (employee) => employee.department === department
+    );
+    setFilteredEmployees(employeesInDepartment);
+    setFormData((prevData) => ({
+      ...prevData,
+      employeeName: "",
+      employeeId: "",
+    }));
+  };
+  
+
+
+
   const handleEmployeeChange = (field, value) => {
-    const selectedEmployee = employeeNames.find((e) => e[field === "employeeName" ? "name" : "id"] === value);
+    const selectedEmployee = filteredEmployees.find(
+      (employee) => employee.name === value
+    );
     if (selectedEmployee) {
       setFormData({
         ...formData,
@@ -85,8 +109,10 @@ function Asset() {
         employeeId: selectedEmployee.employeeId,
       });
     }
-    setFieldsReadonly(true);
   };
+  
+
+  console.log(formData.employeeName)
 
   const handleDialogClose = () => {
     setAddAsset(false);
@@ -138,7 +164,7 @@ const handleStatusChange = async (id, newStatus) => {
   try {
     // Send the updated status to the backend
     const response = await axios.put(
-     `http://server.ovf.bgg.mybluehostin.me:8080/changeStatus/${id}`,
+      `http://server.ovf.bgg.mybluehostin.me:8080/changeStatus/${id}`,
       {
         status: newStatus,
       }
@@ -146,16 +172,20 @@ const handleStatusChange = async (id, newStatus) => {
 
     console.log("Response from backend:", response.data);
 
-    // Re-fetch data from the backend to ensure synchronization
-    const updatedData = await axios.get("http://server.ovf.bgg.mybluehostin.me:8080/findAllAsset");
-    console.log(updatedData.data.data);
-    setData(updatedData.data.data); // Update state with fresh data from backend
-    // alert("Status updated successfully!");
+    // Update the status in the current list without re-fetching
+    setData((prevData) =>
+      prevData.map((item) =>
+        item.id === id ? { ...item, status: newStatus } : item
+      )
+    );
+
+    alert("Status updated successfully!");
   } catch (error) {
     console.error("Error updating status:", error);
     alert("Failed to update status.");
   }
 };
+
 
 
 console.log(filteredData)
@@ -322,146 +352,177 @@ console.log(filteredData)
       </div>
 
       {/* Add Asset Dialog */}
-      <Dialog
-        open={addAsset}
-        onClose={handleDialogClose}
+     {/* Add Asset Dialog */}
+<Dialog
+  open={addAsset}
+  onClose={handleDialogClose}
+  fullWidth
+  maxWidth="sm"
+>
+  <div className="p-6">
+    <h3 className="text-xl sm:text-2xl font-semibold text-center mb-6">
+      Add Asset
+    </h3>
+    <form className="space-y-4" onSubmit={handleAddAssetSubmit}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Asset Name */}
+        <TextField
+          fullWidth
+          label="Asset Name"
+          variant="outlined"
+          required
+          name="assetName"
+          value={formData.assetName}
+          onChange={(e) => handleFormChange("assetName", e.target.value)}
+        />
+
+        {/* Asset ID */}
+        <TextField
+          fullWidth
+          label="Asset Id"
+          variant="outlined"
+          name="assetId"
+          value={formData.assetId}
+          onChange={(e) => handleFormChange("assetId", e.target.value)}
+        />
+
+        {/* Department */}
+        <TextField
+          fullWidth
+          select
+          label="Department"
+          variant="outlined"
+          value={formData.department}
+          onChange={(e) => handleDepartmentChange(e.target.value)}
+        >
+          <MenuItem value="SALES">Sales</MenuItem>
+          <MenuItem value="MARKETING">Marketing</MenuItem>
+          <MenuItem value="TECH">Tech</MenuItem>
+          <MenuItem value="OTHER">Other</MenuItem>
+        </TextField>
+
+        {/* Employee Name */}
+        <TextField
+          fullWidth
+          label="Employee Name"
+          select
+          variant="outlined"
+          value={formData.employeeName}
+          onChange={(e) =>
+            handleEmployeeChange("employeeName", e.target.value)
+          }
+        >
+          {filteredEmployees.map((employee) => (
+            <MenuItem key={employee.id} value={employee.name}>
+              {employee.name}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        {/* Employee ID */}
+        <TextField
+          fullWidth
+          label="Employee Id"
+          variant="outlined"
+          value={formData.employeeId}
+          disabled
+        />
+
+        {/* Granted Date */}
+        <TextField
+          fullWidth
+          label="Granted Date"
+          type="date"
+          InputLabelProps={{ shrink: true }}
+          variant="outlined"
+          name="grantedDate"
+          value={formData.grantedDate}
+          onChange={(e) => handleFormChange("grantedDate", e.target.value)}
+          inputProps={{
+            min: new Date().toISOString().split("T")[0], // Disable past dates
+          }}
+        />
+
+        {/* Valid Upto */}
+        <TextField
+          fullWidth
+          label="Valid Upto (In Months)"
+          type="date"
+          InputLabelProps={{ shrink: true }}
+          variant="outlined"
+          name="validUpto"
+          value={formData.validUpto}
+          onChange={(e) => handleFormChange("validUpto", e.target.value)}
+          inputProps={{
+            min: new Date().toISOString().split("T")[0], // Disable past dates
+          }}
+        />
+
+        {/* Asset Value */}
+        <TextField
+          fullWidth
+          label="Value"
+          type="tel"
+          variant="outlined"
+          name="assetValue"
+          value={formData.assetValue}
+          onChange={(e) => handleFormChange("assetValue", e.target.value)}
+        />
+      </div>
+
+      {/* Description */}
+      <TextField
         fullWidth
-        maxWidth="sm"
+        multiline
+        rows={3}
+        label="Description"
+        variant="outlined"
+        name="description"
+        value={formData.description}
+        onChange={(e) => handleFormChange("description", e.target.value)}
+      />
+
+      {/* Status */}
+      <TextField
+        fullWidth
+        select
+        label="Status"
+        variant="outlined"
+        name="status"
+        value={formData.status}
+        onChange={(e) => handleFormChange("status", e.target.value)}
       >
-        <div className="p-6">
-          <h3 className="text-xl sm:text-2xl font-semibold text-center mb-6">
-            Add Asset
-          </h3>
-          <form className="space-y-4" onSubmit={handleAddAssetSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <TextField
-                fullWidth
-                label="Asset Name"
-                variant="outlined"
-                required
-                name="assetName"
-                value={formData.assetName}
-                onChange={(e) => handleFormChange("assetName", e.target.value)}
-              />
-              <TextField
-                fullWidth
-                label="Asset Id"
-                variant="outlined"
-                name="assetId"
-                value={formData.assetId}
-                onChange={(e) => handleFormChange("assetId", e.target.value)}
-              />
-              <TextField
-                fullWidth
-                label="Employee Name"
-                select
-                variant="outlined"
-                value={formData.employeeName}
-                onChange={(e) =>
-                  handleEmployeeChange("employeeName", e.target.value)
-                }
-                // disabled={fieldsReadonly}
-              >
-                {employeeNames.map((employee) => (
-                  <MenuItem key={employee.id} value={employee.name}>
-                    {employee.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                fullWidth
-                label="Employee Id"
-                variant="outlined"
-                value={formData.employeeId}
-                onChange={(e) =>
-                  handleEmployeeChange("employeeId", e.target.value)
-                }
-                disabled={fieldsReadonly}
-              />
-              <TextField
-                fullWidth
-                label="Granted Date"
-                type="date"
-                InputLabelProps={{ shrink: true }}
-                variant="outlined"
-                name="grantedDate"
-                value={formData.grantedDate}
-                onChange={(e) => handleFormChange("grantedDate", e.target.value)}
-                inputProps={{
-        min: new Date().toISOString().split("T")[0], // Disable past dates
-      }}
-              />
-              <TextField
-                fullWidth
-                label="Valid Upto (In Months)"
-                type="date"
-                InputLabelProps={{ shrink: true }}
-                variant="outlined"
-                name="validUpto"
-                value={formData.validUpto}
-                onChange={(e) => handleFormChange("validUpto", e.target.value)}
-                inputProps={{
-        min: new Date().toISOString().split("T")[0], // Disable past dates
-      }}
-              />
-              <TextField
-                fullWidth
-                label="Value"
-                type="tel"
-                variant="outlined"
-                name="assetValue"
-                value={formData.assetValue}
-                onChange={(e) => handleFormChange("assetValue", e.target.value)}
-              />
-            </div>
-            <TextField
-              fullWidth
-              multiline
-              rows={3}
-              label="Description"
-              variant="outlined"
-              name="description"
-              value={formData.description}
-              onChange={(e) => handleFormChange("description", e.target.value)}
-            />
-            <TextField
-              fullWidth
-              select
-              label="Status"
-              variant="outlined"
-              name="status"
-              value={formData.status}
-              onChange={(e) => handleFormChange("status", e.target.value)}
-            >
-              <MenuItem value="PENDING">Pending</MenuItem>
-              <MenuItem value="APPROVED">Approved</MenuItem>
-              <MenuItem value="GRANTED">Granted</MenuItem>
-              <MenuItem value="RETURNED">Returned</MenuItem>
-            </TextField>
-            <div className="flex justify-end space-x-2">
-              <Button
-                variant="contained"
-                sx={{
-                  bgcolor: "#CD5C5C",
-                }}
-                onClick={handleDialogClose}
-              >
-                <b>Cancel</b>
-              </Button>
-              <Button
-                variant="contained"
-                sx={{
-                  bgcolor: "#b17f27",
-                  color: "#fffff",
-                }}
-                type="submit"
-              >
-                <b>Submit</b>
-              </Button>
-            </div>
-          </form>
-        </div>
-      </Dialog>
+        <MenuItem value="PENDING">Pending</MenuItem>
+        <MenuItem value="APPROVED">Approved</MenuItem>
+        <MenuItem value="GRANTED">Granted</MenuItem>
+        <MenuItem value="RETURNED">Returned</MenuItem>
+      </TextField>
+
+      <div className="flex justify-end space-x-2">
+        <Button
+          variant="contained"
+          sx={{
+            bgcolor: "#CD5C5C",
+          }}
+          onClick={handleDialogClose}
+        >
+          <b>Cancel</b>
+        </Button>
+        <Button
+          variant="contained"
+          sx={{
+            bgcolor: "#b17f27",
+            color: "#fffff",
+          }}
+          type="submit"
+        >
+          <b>Submit</b>
+        </Button>
+      </div>
+    </form>
+  </div>
+</Dialog>
+
     </div>
   );
 }

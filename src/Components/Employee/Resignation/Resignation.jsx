@@ -4,6 +4,8 @@ import { Button, TextField, Snackbar } from "@mui/material";
 import axios from "axios";
 import { Alert } from "@mui/material";
 
+import {useAuth} from "../../../Components/Context/AuthContext"
+
 function Resignation() {
   const {
     register,
@@ -17,9 +19,11 @@ function Resignation() {
 
   const sendResignationForm = async (data) => {
     try {
-      await axios.post("http://server.ovf.bgg.mybluehostin.me:8080/resignationDetail", data, {
+      let response=await axios.post("http://server.ovf.bgg.mybluehostin.me:8080/resignationDetail", data, {
         headers: { "Content-Type": "application/json" },
       });
+
+      console.log(response.data)
       setSnackbarMessage("Form submitted successfully!");
       setOpenSnackbar(true);
       reset(); // Clear the form
@@ -33,6 +37,20 @@ function Resignation() {
     setOpenSnackbar(false);
   };
 
+
+  let {authState}=useAuth()
+  console.log(authState)
+
+
+  let EmployeeName=authState.userDetails.userName;
+  let EmployeeId=authState.userDetails.employeeId;
+  let Email=authState.userDetails.email;
+  let mobile=authState.userDetails.phoneNumber;
+
+
+let today =new Date();
+
+ today = String(today.getDate()).padStart(2, '0');
   return (
     <div className="flex flex-col items-center min-h-screen mt-32">
       <div className="bg-white shadow-lg rounded-2xl p-8 sm:p-10 w-full sm:max-w-lg">
@@ -41,6 +59,8 @@ function Resignation() {
         <form onSubmit={handleSubmit(sendResignationForm)} className="space-y-6">
           <div>
             <TextField
+
+            value={EmployeeName}
               label="Full Name"
               fullWidth
               variant="outlined"
@@ -51,25 +71,30 @@ function Resignation() {
               error={!!errors.name}
               helperText={errors.name?.message}
               className="w-full"
+              readonly
             />
           </div>
 
           <div>
             <TextField
-              label="Employee Email Id"
+            value={EmployeeId}
+              label="Employee Id"
               fullWidth
               variant="outlined"
-              {...register("email", {
-                required: "Email is required",
-                pattern: { value: /^\S+@\S+$/i, message: "Invalid email address" },
+              {...register("employeeId", {
+                required: "Employee Id is required",
               })}
-              error={!!errors.email}
-              helperText={errors.email?.message}
+              error={!!errors.employeeId}
+              helperText={errors.employeeId?.message}
+              readonly
             />
           </div>
 
+         
+
           <div>
             <TextField
+            value={mobile}
               label="Contact Number"
               fullWidth
               variant="outlined"
@@ -79,38 +104,43 @@ function Resignation() {
               })}
               error={!!errors.contactNumber}
               helperText={errors.contactNumber?.message}
+              readonly
             />
           </div>
 
           <div>
             <TextField
-              label="Employee Id"
+            value={Email}
+              label="Employee Email Id"
               fullWidth
               variant="outlined"
-              {...register("employeeId", {
-                required: "Employee Id is required",
+              {...register("email", {
+                required: "Email is required",
+                pattern: { value: /^\S+@\S+$/i, message: "Invalid email address" },
               })}
-              error={!!errors.employeeId}
-              helperText={errors.employeeId?.message}
+              error={!!errors.email}
+              helperText={errors.email?.message}
+              readonly
             />
           </div>
 
           <div>
-            <TextField
-              label="Date of Resignation"
-              fullWidth
-              type="date"
-              variant="outlined"
-              {...register("dateOfResignation", {
-                required: "Date of Resignation is required",
-              })}
-              error={!!errors.dateOfResignation}
-              helperText={errors.dateOfResignation?.message}
-              InputLabelProps={{ shrink: true }}
-              inputProps={{
-        min: new Date().toISOString().split("T")[0], // Disable past dates
-      }}
-            />
+          <TextField
+  label="Date of Resignation"
+  fullWidth
+  type="date"
+  variant="outlined"
+  {...register("dateOfResignation", {
+    required: "Date of Resignation is required",
+  })}
+  error={!!errors.dateOfResignation}
+  helperText={errors.dateOfResignation?.message}
+  InputLabelProps={{ shrink: true }}
+  inputProps={{
+    min: new Date().toISOString().split("T")[0], // Ensure the user can only select today's date or earlier
+  }}
+/>
+
           </div>
 
           <div>

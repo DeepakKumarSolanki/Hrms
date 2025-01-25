@@ -6,7 +6,7 @@ function Policies() {
 
   return (
     <div className="p-4 md:p-6 lg:p-8">
-      {/* Header */}
+      {/* BreadCrumbs */}
       <div className="mb-6">
         <h2 className="text-xl md:text-2xl font-semibold">Policies</h2>
         <div className="text-gray-500 text-sm md:text-base">

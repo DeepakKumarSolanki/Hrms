@@ -56,21 +56,6 @@ const Calendar2025 = () => {
     December: [6, 13, 20, 27],
   };
 
-  const salesHighlightDates = {
-    January: [6, 13, 20, 27],
-    February: [3, 10, 17, 24],
-    March: [3, 10, 17, 24, 31],
-    April: [7, 14, 21, 28],
-    May: [4, 11, 18, 25],
-    June: [1, 8, 15, 22, 29],
-    July: [6, 13, 20, 27],
-    August: [3, 10, 17, 24, 31],
-    September: [1, 8, 15, 22, 29],
-    October: [5, 12, 19, 26],
-    November: [2, 9, 16, 23, 30],
-    December: [7, 14, 21, 28],
-  };
-
   const governmentHolidayDates = {
     January: { 26: "Republic Day" },
     August: { 15: "Independence Day", 27: "Ganesh Chaturthi" },
@@ -119,30 +104,32 @@ const Calendar2025 = () => {
     return "bg-gray-100 text-gray-700";
   };
 
+
   return (
-    <div className="bg-gray-100 min-h-screen p-8">
-      <div className="bg-white shadow-lg rounded-xl p-8 max-w-10xl mx-auto">
-        <h1 className="text-4xl sm:text-5xl font-extrabold  mb-8 text-gray-800">
+    <div className="bg-gray-100 min-h-screen p-4 md:p-8">
+      <div className="bg-white shadow-lg rounded-xl p-4 md:p-8 max-w-6xl mx-auto">
+        <h1 className="text-2xl md:text-4xl font-extrabold text-yellow-600 text-center mb-8">
           2025 Calendar
         </h1>
-         {/* Dropdown */}
-      <div className="flex mb-8">
-        <TextField
-          fullWidth
-          variant="outlined"
-          label="Select Department"
-          size="medium"
-          select
-          value={status}
-          onChange={handleChange}
-          className="bg-white shadow-md max-w-md"
-        >
-          {/* <MenuItem value="Sales">Sales Department</MenuItem> */}
-          <MenuItem value="Backend">Backend Department</MenuItem>
-        </TextField>
-      </div>
-{/* Note Section */}
-      <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 shadow-md rounded-lg p-6 mb-8 border border-yellow-200">
+
+        {/* Dropdown */}
+        <div className="mb-8 flex justify-center">
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Select Department"
+            size="medium"
+            select
+            value={status}
+            onChange={handleChange}
+            className="bg-white shadow-md w-full max-w-md"
+          >
+            <MenuItem value="Backend">Backend Department</MenuItem>
+          </TextField>
+        </div>
+
+        {/* Note Section */}
+        <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 shadow-md rounded-lg p-6 mb-8 border border-yellow-200">
         <h2 className="text-lg sm:text-xl font-semibold text-yellow-800 mb-4">
           <b>📌 Note for Employees</b>
         </h2>
@@ -166,7 +153,9 @@ const Calendar2025 = () => {
         </div>
       </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        {/* Calendar */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {months.map((month, index) => {
             const daysArray = generateDays(month.days, month.startDay);
 
@@ -175,14 +164,14 @@ const Calendar2025 = () => {
                 key={index}
                 className="bg-gradient-to-br from-blue-50 to-white border border-blue-200 rounded-lg shadow-md p-4"
               >
-                <h2 className="text-xl sm:text-2xl font-bold text-center text-blue-700 mb-2">
+                <h2 className="text-lg md:text-xl font-bold text-center text-blue-700 mb-4">
                   {month.name}
                 </h2>
-                <div className="grid grid-cols-7 gap-1 text-center">
+                <div className="grid grid-cols-7 gap-2 text-center">
                   {daysOfWeek.map((day, i) => (
                     <div
                       key={i}
-                      className="text-sm font-semibold text-gray-600 uppercase"
+                      className="text-xs md:text-sm font-semibold text-gray-600 uppercase"
                     >
                       {day}
                     </div>
@@ -190,7 +179,7 @@ const Calendar2025 = () => {
                   {daysArray.map((day, i) => (
                     <div
                       key={i}
-                      className={`rounded-full text-xs sm:text-sm font-medium py-2 px-2 ${
+                      className={`rounded-full text-xs md:text-sm font-medium py-1 md:py-2 ${
                         day
                           ? `${isHighlighted(
                               month.name,
@@ -198,13 +187,6 @@ const Calendar2025 = () => {
                             )} hover:bg-blue-200 hover:shadow cursor-pointer`
                           : "invisible"
                       }`}
-                      title={
-                        restrictedHolidayDates[month.name]?.[day]
-                          ? `Restricted Holiday - ${restrictedHolidayDates[month.name][day]}`
-                          : governmentHolidayDates[month.name]?.[day]
-                          ? `Public Holiday - ${governmentHolidayDates[month.name][day]}`
-                          : ""
-                      }
                     >
                       {day}
                     </div>

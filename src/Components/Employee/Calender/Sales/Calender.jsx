@@ -92,7 +92,7 @@ const Calendar2025 = () => {
     if (restrictedHolidayDates[monthName]?.[day]) {
       return "bg-blue-400 text-white shadow-md";
     }
-   
+
     if (status === "Sales" && salesHighlightDates[monthName]?.includes(day)) {
       return "bg-red-400 text-white shadow-md";
     }
@@ -100,52 +100,44 @@ const Calendar2025 = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen p-8">
-      <div className="bg-white shadow-lg rounded-xl p-8 max-w-10xl mx-auto">
-        <h1 className="text-4xl sm:text-5xl font-extrabold  mb-8 text-gray-800">
+    <div className="bg-gray-100 min-h-screen p-4 sm:p-8">
+      <div className="bg-white shadow-lg rounded-xl p-4 sm:p-8 max-w-6xl mx-auto">
+        <h1 className="text-2xl sm:text-4xl font-extrabold mb-8 text-yellow-600 text-center">
           2025 Calendar
         </h1>
-         {/* Dropdown */}
-      <div className="flex mb-8">
-        <TextField
-          fullWidth
-          variant="outlined"
-          label="Select Department"
-          size="medium"
-          select
-          value={status}
-          onChange={handleChange}
-          className="bg-white shadow-md max-w-md"
-        >
-          <MenuItem value="Sales">Sales Department</MenuItem>
-         
-        </TextField>
-      </div>
-{/* Note Section */}
-      <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 shadow-md rounded-lg p-6 mb-8 border border-yellow-200">
-        <h2 className="text-lg sm:text-xl font-semibold text-yellow-800 mb-4">
-          <b>📌 Note for Employees</b>
-        </h2>
-        <div className="flex items-center mb-4">
-          <p className="text-xl mr-2">🔴</p>
-          <h1 className="text-sm sm:text-lg">
-            The Red dates are holidays for sales department.
-          </h1>
+        {/* Dropdown */}
+        <div className="flex justify-center mb-8">
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Select Department"
+            size="medium"
+            select
+            value={status}
+            onChange={handleChange}
+            className="bg-white shadow-md max-w-md"
+          >
+            <MenuItem value="Sales">Sales Department</MenuItem>
+          </TextField>
         </div>
-        <div className="flex items-center mb-4">
-          <p className="text-xl mr-2">🟢</p>
-          <h1 className="text-sm sm:text-lg">
-            The Green dates are public holidays.
-          </h1>
+        {/* Note Section */}
+        <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 shadow-md rounded-lg p-4 sm:p-6 mb-8 border border-yellow-200">
+          <h2 className="text-lg sm:text-xl font-semibold text-yellow-800 mb-4">
+            <b>📌 Note for Employees</b>
+          </h2>
+          <div className="flex items-center mb-2">
+            <p className="text-xl mr-2">🔴</p>
+            <p className="text-sm sm:text-base">The Red dates are holidays for the Sales department.</p>
+          </div>
+          <div className="flex items-center mb-2">
+            <p className="text-xl mr-2">🟢</p>
+            <p className="text-sm sm:text-base">The Green dates are public holidays.</p>
+          </div>
+          <div className="flex items-center">
+            <p className="text-xl mr-2">🔵</p>
+            <p className="text-sm sm:text-base">The Blue dates are restricted holidays.</p>
+          </div>
         </div>
-        <div className="flex items-center">
-          <p className="text-xl mr-2">🔵</p>
-          <h1 className="text-sm sm:text-lg">
-            The Blue dates are restricted holidays.
-          </h1>
-        </div>
-      </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {months.map((month, index) => {
             const daysArray = generateDays(month.days, month.startDay);
@@ -155,7 +147,7 @@ const Calendar2025 = () => {
                 key={index}
                 className="bg-gradient-to-br from-blue-50 to-white border border-blue-200 rounded-lg shadow-md p-4"
               >
-                <h2 className="text-xl sm:text-2xl font-bold text-center text-blue-700 mb-2">
+                <h2 className="text-lg sm:text-xl font-bold text-center text-blue-700 mb-2">
                   {month.name}
                 </h2>
                 <div className="grid grid-cols-7 gap-1 text-center">
