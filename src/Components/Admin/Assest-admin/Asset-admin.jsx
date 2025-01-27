@@ -49,7 +49,7 @@ function Asset() {
     setLoading(true);
     try {
       const response = await axios.get(
-        "http://server.ovf.bgg.mybluehostin.me:8080/fetchAllEmployees"
+        "http://server.ovf.bgg.mybluehostin.me:8080/getNameAndDepartment"
       );
       setEmployeeNames(response.data.data); // Ensure department is part of the response
       console.log(response.data.data);
@@ -100,12 +100,12 @@ function Asset() {
 
   const handleEmployeeChange = (field, value) => {
     const selectedEmployee = filteredEmployees.find(
-      (employee) => employee.name === value
+      (employee) => employee.employeeName === value
     );
     if (selectedEmployee) {
       setFormData({
         ...formData,
-        employeeName: selectedEmployee.name,
+        employeeName: selectedEmployee.employeeName,
         employeeId: selectedEmployee.employeeId,
       });
     }
@@ -413,8 +413,8 @@ console.log(filteredData)
           }
         >
           {filteredEmployees.map((employee) => (
-            <MenuItem key={employee.id} value={employee.name}>
-              {employee.name}
+            <MenuItem key={employee.employeeId} value={employee.employeeName}>
+              {employee.employeeName}
             </MenuItem>
           ))}
         </TextField>

@@ -27,7 +27,7 @@ function App() {
 
 
   <AssetAdmin /> 
- {/*
+ 
  <Termination/> 
   <ResignationAdminPanel/> 
    <Resignation/>   
@@ -38,38 +38,6 @@ function App() {
     <CalendarAdmin/> 
      <KnowledgeBaseAdmin/>    
      <KnowledgeBase/>
-
-
-  
- 
-  
-
-
-      
-
-    
- 
- 
-
-
-     
-
-
-
-
-   
-
-
-
-
-    
-
-      
-     
-    
-   
-   
-
 
 <CalendarSales/>
 <CalendarBackend/> 
@@ -84,7 +52,7 @@ function App() {
  
  
  
-  */}
+ 
        <Policies/>
 
 

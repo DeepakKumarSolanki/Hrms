@@ -159,7 +159,7 @@ function TerminationPage() {
     const fetchEmployees = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://server.ovf.bgg.mybluehostin.me:8080/fetchAllEmployees"); // Replace with actual API
+        const response = await axios.get("http://server.ovf.bgg.mybluehostin.me:8080/getNameAndDepartment"); // Replace with actual API
     
         setEmployeeData(response.data.data); // Assuming data is an array of employee objects { id, name, department }
       } catch (error) {
@@ -189,7 +189,7 @@ function TerminationPage() {
   // Automatically update employeeId based on selected employeeName
   useEffect(() => {
     if (employeeName) {
-      const selectedEmployee = filteredEmployees.find((emp) => emp.name === employeeName);
+      const selectedEmployee = filteredEmployees.find((emp) => emp.employeeName === employeeName);
       if (selectedEmployee) {
         setValue("employeeId", selectedEmployee.employeeId); // Update employeeId
       }
@@ -315,8 +315,8 @@ function TerminationPage() {
               helperText={errors.employeeName ? errors.employeeName.message : ""}
             >
               {filteredEmployees.map((employee) => (
-                <MenuItem key={employee.id} value={employee.name}>
-                  {employee.name}
+                <MenuItem key={employee.employeeId} value={employee.employeeName}>
+                  {employee.employeeName}
                 </MenuItem>
               ))}
             </TextField>

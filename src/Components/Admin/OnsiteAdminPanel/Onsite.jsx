@@ -27,9 +27,9 @@ function OnsiteAdminPanel() {
     <div className="p-4 md:p-6 lg:p-8">
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-xl md:text-2xl font-semibold">Onsite</h2>
-        <div className="text-gray-500 text-sm md:text-base">
-          Dashboard / <span className="text-gray-700 font-medium">Onsite</span>
+        <h2 className="text-xl md:text-2xl font-semibold text-yellow-600">Onsite</h2>
+        <div className="text-yellow-600 text-sm md:text-base">
+          Dashboard / <span className="text-yellow-600 font-medium">Onsite</span>
         </div>
       </div>
 

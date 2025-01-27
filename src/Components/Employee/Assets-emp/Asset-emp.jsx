@@ -61,18 +61,18 @@ function Assest() {
     <div className="p-4 sm:p-6 md:p-8 bg-gray-100 min-h-screen">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-yellow-600">
           Assets
         </h2>
       </div>
 
       {/* Breadcrumb */}
-      <div className="text-sm text-gray-500 mb-4 sm:mb-6">
+      <div className="text-sm text-yellow-600 mb-4 sm:mb-6 ">
         <a href="#" className="hover:underline">
           Dashboard
         </a>
         /
-        <span className="font-semibold text-gray-800">
+        <span className="font-semibold text-yellow-600">
           <a href="#" className="hover:underline">
             Assets
           </a>
